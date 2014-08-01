@@ -12,6 +12,7 @@ func Router(ctx *Context) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/discussions/", ctx.DiscussionHandler).Methods("GET", "POST")
 	r.HandleFunc("/api/discussions/{id}", ctx.PostHandler).Methods("GET", "POST")
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("../../public/")))
 	return r
 }
 
