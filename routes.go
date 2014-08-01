@@ -24,7 +24,13 @@ func die(rw http.ResponseWriter, msg string, err error) {
 	return
 }
 
+func setAPIHeaders(rw http.ResponseWriter) {
+	rw.Header().Set("Content-Type", "application/json")
+}
+
 func (c *Context) DiscussionHandler(rw http.ResponseWriter, req *http.Request) {
+	setAPIHeaders(rw)
+
 	if req.Method == "GET" {
 		enc := json.NewEncoder(rw)
 		if err := enc.Encode(c.dmgr.ListDiscussions()); err != nil {
@@ -48,6 +54,8 @@ func (c *Context) DiscussionHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 func (c *Context) PostHandler(rw http.ResponseWriter, req *http.Request) {
+	setAPIHeaders(rw)
+
 	vars := mux.Vars(req)
 	discID, ok := vars["id"]
 	if !ok {
