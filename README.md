@@ -10,8 +10,10 @@ Then:
 
 ```
 cd cmd/discussied
-go build && ./discussied
+go build && PORT=8000 ./discussied
 ```
+
+(Because Piet doesn't know how to set default values in Go yet.)
 
 How to use the API
 ------------------
