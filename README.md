@@ -33,10 +33,13 @@ echo '{
 }' | http POST localhost:8000/api/discussions/
 ```
 
+To access posts you'll have to use the Big Long ID returned by POSTing a new
+discussion (or in the discussion listing).
+
 List posts on a discussion:
 
 ```
-http localhost:8000/api/discussions/
+http localhost:8000/api/discussions/BIG-LONG-ID
 ```
 
 Create a post on a discussion:
@@ -47,6 +50,3 @@ echo '{
     "body": "lolwat"
 }' | http POST localhost:8000/api/discussions/BIG-LONG-ID
 ```
-
-Note that you'll have to fill in the right BIG-LONG-ID by re-listing
-discussions.
