@@ -101,14 +101,16 @@
 
   <script src="/js/libs/require.js"></script>
   <script>
+    // if not localhost use optimized app.js
+    if (!location.host.match('localhost')) {
+      require.config({ paths: { app: 'app-built' }});
+    };
+    // init!
     require(['/js/requireConfig.js'], function () {
       require(['app']);
     });
-
     // if local, load livereload
-    if (location.host.match('localhost')) {
-      document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
-    };
+    if (location.host.match('localhost')) { document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>'); };
   </script>
   <script>
 
