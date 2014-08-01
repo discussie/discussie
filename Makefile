@@ -1,7 +1,7 @@
 all: run
 
 run:
-	go run cmd/discussied/main.go
+	cd cmd/discussied/ && go run main.go
 
 jsbuild:
 	r.js -o build.js
