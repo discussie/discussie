@@ -8,7 +8,94 @@
 </head>
 <body>
 
-  <div class="main">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-narrow">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Discussie</a>
+      </div>
+
+      <form class="navbar-form navbar-right">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Name">
+        </div>
+      </form>
+
+    </div><!-- /.container-fluid -->
+  </nav>
+
+  <div class="container-narrow">
+
+    <!-- ko if: uriSegments()[0] === '' -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><a href="#post">Panel title <br><small>Posted by Piet 4 hours ago.</small></a></h3>
+      </div>
+      <div class="panel-body">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
+        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
+      </div>
+      <div class="panel-footer text-muted small">4 replies | Last reply by Schmichael 3 hours ago</div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><a href="#post">Panel title <br><small>Posted by Piet 4 hours ago.</small></a></h3>
+      </div>
+      <div class="panel-body">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
+        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
+      </div>
+      <div class="panel-footer text-muted small">4 replies | Last reply by Schmichael 3 hours ago</div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><a href="#post">Panel title <br><small>Posted by Piet 4 hours ago.</small></a></h3>
+      </div>
+      <div class="panel-body">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
+        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
+      </div>
+      <div class="panel-footer text-muted small">4 replies | Last reply by Schmichael 3 hours ago</div>
+    </div>
+    <!-- /ko -->
+
+    <!-- ko if: uriSegments()[0] === 'post' -->
+    <h3 class="col-xs-12">Panel title</h3>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <p class="text-muted small">Schmichael posted 3 hours ago</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
+        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <p class="text-muted small">Schmichael replied 3 hours ago</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
+        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <p class="text-muted small">Schmichael replied 3 hours ago</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
+        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <p class="text-muted small">Schmichael replied 3 hours ago</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
+        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
+      </div>
+    </div>
+    <!-- /ko -->
 
   </div>
 
