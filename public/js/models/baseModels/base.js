@@ -14,7 +14,6 @@ define(['lodash', 'ko'], function (_, ko) {
 		this.jsonIgnore = ['init', 'initialize', '_setup', 'toJSON'];
 
 		// fire _setup which converts static properties ko.obserable and ko.observableArray
-		console.log(this);
 		this._setup(options);
 
 	};

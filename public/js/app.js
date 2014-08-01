@@ -6,11 +6,14 @@ define(
 [
   'lodash',
   'ko',
-  'models/baseModels/baseViewModel'
+  'models/baseModels/baseViewModel',
+  'net'
 ],
-function (_, ko, BaseViewModel) {
+function (_, ko, BaseViewModel, Net) {
 
   var App = function () {
+
+    this.discussions = [];
 
     BaseViewModel.apply(this, arguments);
   };
@@ -18,7 +21,12 @@ function (_, ko, BaseViewModel) {
   _.extend(App.prototype, BaseViewModel.prototype, {
 
     initialize: function () {
-
+      console.log(Net);
+      Net.json.get({url: '/api/discussions/'}).then(function (res) {
+        console.log(res);
+      }, function (error) {
+        console.log(error);
+      });
     }
 
   });
