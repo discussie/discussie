@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>Discussie</title>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> -->
   <link rel="stylesheet" href="/styles/styles.css">
 </head>
 <body>
@@ -16,9 +17,13 @@
         <a class="navbar-brand" href="#">Discussie</a>
       </div>
 
+      <div class="navbar-left navbar-form">
+        <a href="#/new" class="btn btn-default">New Discussion</a>
+      </div>
+
       <form class="navbar-form navbar-right">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Name">
+          <input type="text" class="form-control" placeholder="Name" data-bind="value: user">
         </div>
       </form>
 
@@ -50,6 +55,25 @@
     </section>
     <!-- /ko -->
 
+    <!-- ko if: uriSegments()[0] === 'new' -->
+    <form>
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" class="form-control" data-bind="value: newDiscussion().title">
+      </div>
+      <div class="form-group">
+        <textarea class="form-control" rows="10" data-bind="value: newDiscussion().firstPost().body"></textarea>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary" data-bind="click: $root.submitDiscussion">Create New Discussion</button>
+      </div>
+      <div class="alert alert-warning" role="alert" data-bind="visible: newDiscussion().errorMessage">
+        <strong>Whoops...</strong>
+        <span data-bind="text: newDiscussion().errorMessage"></span>
+      </div>
+    </form>
+    <!-- /ko -->
+
     <!-- ko if: activeDiscussion() -->
     <section class="discussion" data-bind="with: activeDiscussion">
 
@@ -63,6 +87,19 @@
         </div>
       </div>
       <!-- /ko -->
+
+      <form>
+        <div class="form-group">
+          <textarea class="form-control" rows="3" data-bind="value: newPost().body" required></textarea>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary" data-bind="click: $root.submitPost">Post</button>
+        </div>
+        <div class="alert alert-warning" role="alert" data-bind="visible: newPost().errorMessage">
+          <strong>Whoops...</strong>
+          <span data-bind="text: newPost().errorMessage"></span>
+        </div>
+      </form>
 
     </section>
 

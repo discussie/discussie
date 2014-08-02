@@ -9,9 +9,10 @@ define(
   'lodash',
   'ko',
   'models/baseModels/baseModel',
-  'moment'
+  'moment',
+  'models/post'
 ],
-function (_, ko, BaseModel, moment) {
+function (_, ko, BaseModel, moment, Post) {
 
   /**
   * Model variables
@@ -27,6 +28,10 @@ function (_, ko, BaseModel, moment) {
 
     this.posts = [];
 
+    this.newPost = {};
+
+    this.errorMessage = '';
+
     BaseModel.apply(this, arguments);
     this.initialize();
   };
@@ -38,10 +43,29 @@ function (_, ko, BaseModel, moment) {
 
     initialize: function () {
 
+      _.bindAll(this, 'initNewPost', 'migrateNewPost');
+
+      this.initNewPost();
+
       this.fromNowCreated = ko.computed(function () {
         return moment(this.created()).fromNow();
       }, this);
 
+      this.firstPost = ko.computed(function () {
+        return this.posts()[0];
+      }, this);
+
+    },
+
+    initNewPost: function () {
+      this.newPost(new Post({ discussion: this.id }));
+    },
+
+    migrateNewPost: function (id) {
+      this.newPost().id(id); //jshint ignore: line
+      this.newPost().created(moment().format('X'));
+      this.posts.push(this.newPost());
+      this.initNewPost();
     }
 
   });

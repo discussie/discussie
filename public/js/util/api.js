@@ -62,6 +62,14 @@ function (_, Net, ko, BaseModel, Discussion, Post) {
 
     },
 
+    newPost: function (discussion, data, callback) {
+      callback = callback || _.noop;
+      data.id = data.id || discussion.id();
+      this.call('newPost', data, function (res, state) {
+        callback(res, state);
+      });
+    },
+
     getDiscussions: function (callback) {
       var self = this;
       callback = callback || _.noop;
@@ -124,6 +132,7 @@ function (_, Net, ko, BaseModel, Discussion, Post) {
       };
 
       var error = function (res) {
+        console.error(packet, res);
         callback(res, 'error');
       };
 

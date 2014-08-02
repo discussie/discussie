@@ -25,6 +25,8 @@ function (_, ko, BaseModel, moment) {
     this.discussion = options.discussion || null;
     this.id = options.id || null;
 
+    this.errorMessage = '';
+
     BaseModel.apply(this, arguments);
     this.initialize();
   };
