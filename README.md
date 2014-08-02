@@ -107,3 +107,10 @@ Api Endpoints Dev
 `PUT? /api/discussion/{id}` - Update discussion.
 
 `DELETE /api/discussion/{id}` - Delete discussion. (Should we allow?)
+
+### License
+
+See LICENSE for full text (hint: it's [Apache License
+v2](http://www.apache.org/licenses/LICENSE-2.0.html)).
+
+Copyright 2014 Michael Schurter & Piet van Zoen
