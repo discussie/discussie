@@ -108,7 +108,8 @@ Api Endpoints Dev
 
 `DELETE /api/discussion/{id}` - Delete discussion. (Should we allow?)
 
-### License
+License
+-------
 
 See LICENSE for full text (hint: it's [Apache License
 v2](http://www.apache.org/licenses/LICENSE-2.0.html)).
