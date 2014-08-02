@@ -1,8 +1,14 @@
 Discussie
 =========
 
-How to run the backend
-----------------------
+Features
+--------
+
+* Discussions with Posts
+* Post bodies rendered as markdown
+
+Running
+-------
 
 First install Go: http://golang.org/doc/install
 
@@ -12,6 +18,8 @@ Then:
 cd cmd/discussied
 go build && ./discussied
 ```
+
+Open up http://localhost:8000/ in your browser.
 
 How to use the API
 ------------------
