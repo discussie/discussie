@@ -7,12 +7,13 @@ define(
   'lodash',
   'ko',
   'models/baseModels/baseViewModel',
-  'net'
+  'util/api!'
 ],
-function (_, ko, BaseViewModel, Net) {
+function (_, ko, BaseViewModel, Api) {
 
   var App = function () {
 
+    this.loaded = false;
     this.discussions = [];
 
     BaseViewModel.apply(this, arguments);
@@ -21,12 +22,25 @@ function (_, ko, BaseViewModel, Net) {
   _.extend(App.prototype, BaseViewModel.prototype, {
 
     initialize: function () {
-      console.log(Net);
-      Net.json.get({url: '/api/discussions/'}).then(function (res) {
-        console.log(res);
-      }, function (error) {
-        console.log(error);
+      var self = this;
+
+      Api.discussions().forEach(function (discussion) {
+        self.discussions.push(discussion);
       });
+
+      this.activeDiscussion = ko.computed(function () {
+        var discussion = false;
+        if (this.uriSegments()[0] === 'discussion') {
+          var id = this.uriSegments()[1];
+          discussion = _.find(self.discussions(), function (discussion) {
+            return id === discussion.id();
+          });
+        }
+        return discussion;
+      }, this);
+
+
+      this.loaded(true);
     }
 
   });

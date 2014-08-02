@@ -8,6 +8,7 @@
 </head>
 <body>
 
+  <div class="loader text-muted" data-bind="css: { 'loaded': loaded() }">Loading...</div>
   <nav class="navbar navbar-default" role="navigation">
     <div class="container-narrow">
       <!-- Brand and toggle get grouped for better mobile display -->
@@ -26,84 +27,56 @@
 
   <div class="container-narrow">
 
-    <!-- ko if: uriSegments()[0] === '' -->
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><a href="#post">Panel title <br><small>Posted by Piet 4 hours ago.</small></a></h3>
-      </div>
-      <div class="panel-body">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
-        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
-      </div>
-      <div class="panel-footer text-muted small">4 replies | Last reply by Schmichael 3 hours ago</div>
-    </div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><a href="#post">Panel title <br><small>Posted by Piet 4 hours ago.</small></a></h3>
-      </div>
-      <div class="panel-body">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
-        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
-      </div>
-      <div class="panel-footer text-muted small">4 replies | Last reply by Schmichael 3 hours ago</div>
-    </div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><a href="#post">Panel title <br><small>Posted by Piet 4 hours ago.</small></a></h3>
-      </div>
-      <div class="panel-body">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
-        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
-      </div>
-      <div class="panel-footer text-muted small">4 replies | Last reply by Schmichael 3 hours ago</div>
-    </div>
+    <!-- ko if: discussions().length === 0 -->
+    <h1 class="text-center">☹ No discussions here.</h1>
     <!-- /ko -->
 
-    <!-- ko if: uriSegments()[0] === 'post' -->
-    <h3 class="col-xs-12">Panel title</h3>
-
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <p class="text-muted small">Schmichael posted 3 hours ago</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
-        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
+    <!-- ko if: uriSegments()[0] === '' -->
+    <section class="discussions" data-bind="foreach: discussions">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <a data-bind="attr: { href: link }">
+              <span data-bind="text: title"></span> <br>
+              <small>Posted by <span data-bind="text: author"></span>
+              <span data-bind="text: fromNowCreated"></span></small>
+            </a>
+          </h3>
+        </div>
+        <div class="panel-body" data-bind="html: posts()[0].body">
+        </div>
+        <div class="panel-footer text-muted small"><span data-bind="text: posts().length - 1"></span> replies</div>
       </div>
-    </div>
+    </section>
+    <!-- /ko -->
 
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <p class="text-muted small">Schmichael replied 3 hours ago</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
-        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
-      </div>
-    </div>
+    <!-- ko if: activeDiscussion() -->
+    <section class="discussion" data-bind="with: activeDiscussion">
 
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <p class="text-muted small">Schmichael replied 3 hours ago</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
-        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
-      </div>
-    </div>
+      <h3 class="col-xs-12" data-bind="text: title"></h3>
 
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <p class="text-muted small">Schmichael replied 3 hours ago</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus tempore incidunt corporis, quasi temporibus facilis repellendus quod ad quaerat sapiente quidem. Ad repudiandae recusandae aut, optio impedit velit consequuntur perspiciatis.</p>
-        <p>Sint delectus modi, vel quo non veritatis quidem optio nam eius! Perspiciatis, doloremque blanditiis earum, reiciendis vel expedita aperiam deserunt at consequuntur perferendis obcaecati, ipsa accusamus et, debitis aspernatur neque!</p>
+      <!-- ko foreach: posts -->
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p class="text-muted small"><span data-bind="text: author"></span> posted <span data-bind="text: fromNowCreated"></span></p>
+          <div data-bind="html: body"></div>
+        </div>
       </div>
-    </div>
+      <!-- /ko -->
+
+    </section>
+
     <!-- /ko -->
 
   </div>
 
   <script src="/js/libs/require.js"></script>
   <script>
-    // if not localhost use optimized app.js
-    if (!location.host.match('localhost')) {
-      require.config({ paths: { app: 'app-built' }});
+    // dev/prod variables
+    if (location.host.match('localhost')) {
+      require.config({ urlArgs: Date.now() });
+    } else {
+      require.config({ appFile: 'app-built' });
     };
     // init!
     require(['/js/requireConfig.js'], function () {

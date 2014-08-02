@@ -42,6 +42,7 @@ define(['lodash', 'models/baseModels/base'], function (_, Base) {
 
       // set params property
       var update = function () {
+        window.scrollTo(0, 0);
 
         var hash = window.location.hash.replace(/#\/?/, '');
         self.uriSegments(hash.split('/'));

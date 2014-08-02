@@ -8,3 +8,52 @@ h1 a, h2 a, h3 a {
   max-width: 800px;
   margin: 0 auto;
 }
+
+
+
+
+.loader {
+  position: absolute;
+  text-align: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-top: 100px;
+  background-color: #fff;
+}
+
+.loaded {
+  display: none;
+}
+
+/*
+@-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+.loader:before {
+  font-size: 50px;
+  width: 1em;
+  line-height: 1em;
+  text-align: center;
+  display: block;
+  font-weight: bold;
+  content: "|";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-animation: spin 1s linear 0s infinite;
+     -moz-animation: spin 1s linear 0s infinite;
+       -o-animation: spin 1s linear 0s infinite;
+          animation: spin 1s linear 0s infinite;
+}
+*/
