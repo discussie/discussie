@@ -13,13 +13,14 @@ func Router(ctx *Context, path string) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/discussions/", adapt(ctx, discussionHandler)).Methods("GET", "POST")
 	r.HandleFunc("/api/discussions/{id}", adapt(ctx, postHandler)).Methods("GET", "POST")
+	r.HandleFunc("/api/render/", adapt(ctx, renderHandler)).Methods("POST")
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir(path)))
 	return r
 }
 
-type handler func(*Context, *http.Request) (body interface{}, code int, err error)
+type jsonHandler func(*Context, *http.Request) (body interface{}, code int, err error)
 
-func adapt(ctx *Context, h handler) func(http.ResponseWriter, *http.Request) {
+func adapt(ctx *Context, h jsonHandler) func(http.ResponseWriter, *http.Request) {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		setAPIHeaders(rw)
 		body, code, err := h(ctx, req)
@@ -99,7 +100,21 @@ func postHandler(c *Context, req *http.Request) (interface{}, int, error) {
 		}
 		return nil, 500, err
 	}
-	return struct {
+	return &struct {
 		P string `json:"post_id"`
 	}{P: post.ID}, 200, nil
+}
+
+func renderHandler(_ *Context, req *http.Request) (interface{}, int, error) {
+	defer req.Body.Close()
+	incoming := struct {
+		B string `json:"body"`
+	}{}
+	if err := json.NewDecoder(req.Body).Decode(&incoming); err != nil {
+		return nil, 400, err
+	}
+	body := string(blackfriday.MarkdownCommon([]byte(incoming.B)))
+	return &struct {
+		B string `json:"body"`
+	}{B: body}, 200, nil
 }
