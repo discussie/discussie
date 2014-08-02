@@ -4,11 +4,16 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"log"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
+)
+
+var (
+	DiscussionNotFound = errors.New("discussion not found")
 )
 
 type Manager struct {
@@ -23,6 +28,12 @@ func newManager(dbFilename string) (*Manager, error) {
 	m := &Manager{db: db}
 	m.init()
 	return m, nil
+}
+
+func getDiscussion(tx *sql.Tx, id string) (*Discussion, error) {
+	r := tx.QueryRow("SELECT * FROM discussions WHERE id = ?", id)
+	d := &Discussion{}
+	return d, r.Scan(&d.ID, &d.Title, &d.Created, &d.Author)
 }
 
 func (m *Manager) ListDiscussions() []*Discussion {
@@ -97,6 +108,14 @@ func (m *Manager) Post(p *Post) error {
 
 	tx, err := m.db.Begin()
 	if err != nil {
+		return err
+	}
+
+	_, err = getDiscussion(tx, p.DiscussionID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return DiscussionNotFound
+		}
 		return err
 	}
 

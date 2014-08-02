@@ -57,8 +57,8 @@ func (c *Context) PostHandler(rw http.ResponseWriter, req *http.Request) {
 	setAPIHeaders(rw)
 
 	vars := mux.Vars(req)
-	discID, ok := vars["id"]
-	if !ok {
+	discID := vars["id"]
+	if discID == "" {
 		die(rw, "no id found", nil)
 	}
 
@@ -78,6 +78,11 @@ func (c *Context) PostHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	if err := c.dmgr.Post(post); err != nil {
+		if err == DiscussionNotFound {
+			rw.WriteHeader(404)
+			rw.Write([]byte("discussion not found"))
+			return
+		}
 		die(rw, "Error creating post 2: ", err)
 		return
 	}
