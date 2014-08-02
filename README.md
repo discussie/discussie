@@ -79,4 +79,31 @@ To run locally simply run go api and go to `http://localhost:8000` in your brows
 
 ### Javascript optimization
 
-To optimize javascript install `r.js` by running `npm install -g requirejs`. Then run `make jsbuild` to build optimized version of `app.js`.
+To optimize javascript install `r.js` by running `npm install -g requirejs`. Then run `make jsbuild` to build and commit an optimized version of `app.js`.
+
+Api Endpoints Dev
+----------------
+
+### Current
+
+`GET /api/discussions/` - Get list of disussions.
+
+`POST /api/discussions/` - Create a new discussion.
+
+`GET /api/discussions/{id}` - Get list of discussion posts.
+
+`POST /api/discussions/{id}` - Create a new discussion post.
+
+`POST /api/render/` - Render markdown string into HTML.
+
+`GET /api/posts/recent/` - Get list of most recent posts.
+
+### Wishlist
+
+`PUT? /api/posts/{id}` - Update post.
+
+`DELETE /api/posts/{id}` - Delete post.
+
+`PUT? /api/discussion/{id}` - Update discussion.
+
+`DELETE /api/discussion/{id}` - Delete discussion. (Should we allow?)
