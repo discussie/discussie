@@ -13,6 +13,7 @@ func Router(ctx *Context, path string) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/discussions/", adapt(ctx, discussionHandler)).Methods("GET", "POST")
 	r.HandleFunc("/api/discussions/{id}", adapt(ctx, postHandler)).Methods("GET", "POST")
+	r.HandleFunc("/api/posts/recent/", adapt(ctx, recentHandler)).Methods("GET")
 	r.HandleFunc("/api/render/", adapt(ctx, renderHandler)).Methods("POST")
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir(path)))
 	return r
@@ -81,7 +82,10 @@ func postHandler(c *Context, req *http.Request) (interface{}, int, error) {
 	}
 
 	if req.Method == "GET" {
-		posts := c.dmgr.ListPosts(discID)
+		posts, err := c.dmgr.ListPosts(discID)
+		if err != nil {
+			return nil, 500, err
+		}
 		// Render as markdown
 		for _, p := range posts {
 			p.Body = string(blackfriday.MarkdownCommon([]byte(p.Body)))
@@ -107,6 +111,15 @@ func postHandler(c *Context, req *http.Request) (interface{}, int, error) {
 	return &struct {
 		P string `json:"post_id"`
 	}{P: post.ID}, 200, nil
+}
+
+func recentHandler(c *Context, req *http.Request) (interface{}, int, error) {
+	const recentPostsLimit = 20 //FIXME Make a global default limit? See #3
+	posts, err := c.dmgr.RecentPosts(recentPostsLimit)
+	if err != nil {
+		return nil, 500, err
+	}
+	return posts, 200, err
 }
 
 func renderHandler(_ *Context, req *http.Request) (interface{}, int, error) {

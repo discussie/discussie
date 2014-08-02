@@ -65,6 +65,12 @@ Preview a post by just rendering it as markdown:
 echo '{"body": "**ok**"}' | http POST localhost:8000/api/render/
 ```
 
+List most recent posts from newest to oldest:
+
+```
+http localhost:8000/api/posts/recent/
+```
+
 
 How to use app
 --------------

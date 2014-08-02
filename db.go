@@ -81,16 +81,16 @@ func (m *Manager) Discuss(d *Discussion) error {
 	return tx.Commit()
 }
 
-func (m *Manager) ListPosts(discID string) []*Post {
+func (m *Manager) selectPosts(q string, params ...interface{}) ([]*Post, error) {
 	tx, err := m.db.Begin()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer tx.Rollback()
 
-	c, err := tx.Query("SELECT * FROM posts WHERE discussion_id = ? ORDER BY created ASC", discID)
+	c, err := tx.Query(q, params...)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer c.Close()
 
@@ -98,11 +98,21 @@ func (m *Manager) ListPosts(discID string) []*Post {
 	for c.Next() {
 		p := &Post{}
 		if err := c.Scan(&p.ID, &p.DiscussionID, &p.Created, &p.Author, &p.Body); err != nil {
-			panic(err)
+			return nil, err
 		}
 		all = append(all, p)
 	}
-	return all
+	return all, nil
+}
+
+// RecentPosts fetches the most recent posts globally from newest to oldest.
+func (m *Manager) RecentPosts(limit int) ([]*Post, error) {
+	return m.selectPosts("SELECT * FROM posts ORDER BY created DESC LIMIT ?", limit)
+}
+
+// ListPosts fetches posts for a particular discussion order from oldest to newest.
+func (m *Manager) ListPosts(discID string) ([]*Post, error) {
+	return m.selectPosts("SELECT * FROM posts WHERE discussion_id = ? ORDER BY created ASC", discID)
 }
 
 func (m *Manager) Post(p *Post) error {
