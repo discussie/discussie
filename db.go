@@ -56,8 +56,8 @@ func (m *Manager) Discuss(d *Discussion) error {
 		return err
 	}
 
-	_, err = tx.Exec("INSERT INTO discussions (id, title, created, author) VALUES (?, ?, ?, ?)",
-		d.ID, d.Title, d.Created, d.Author)
+	_, err = tx.Exec("INSERT INTO discussions (id, title, author) VALUES (?, ?, ?)",
+		d.ID, d.Title, d.Author)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -97,8 +97,8 @@ func (m *Manager) Post(p *Post) error {
 		return err
 	}
 
-	_, err = tx.Exec("INSERT INTO posts (id, discussion_id, created, author, body) VALUES (?, ?, ?, ?, ?)",
-		p.ID, p.DiscussionID, p.Created, p.Author, p.Body)
+	_, err = tx.Exec("INSERT INTO posts (id, discussion_id, author, body) VALUES (?, ?, ?, ?)",
+		p.ID, p.DiscussionID, p.Author, p.Body)
 	if err != nil {
 		tx.Rollback()
 		return err
