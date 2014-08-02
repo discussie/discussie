@@ -50,7 +50,7 @@ func (c *Context) DiscussionHandler(rw http.ResponseWriter, req *http.Request) {
 		die(rw, "Error creating discussion 2: ", err)
 		return
 	}
-	rw.Write([]byte(disc.ID))
+	rw.Write([]byte(`{ "discussion_id": "` + disc.ID + `" }`))
 }
 
 func (c *Context) PostHandler(rw http.ResponseWriter, req *http.Request) {
@@ -81,5 +81,5 @@ func (c *Context) PostHandler(rw http.ResponseWriter, req *http.Request) {
 		die(rw, "Error creating post 2: ", err)
 		return
 	}
-	rw.Write([]byte(post.ID))
+	rw.Write([]byte(`{ "post_id": "` + post.ID + `" }`))
 }
