@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -50,14 +51,15 @@ func (m *Manager) ListDiscussions() []*Discussion {
 
 func (m *Manager) Discuss(d *Discussion) error {
 	d.ID = newID()
+	d.Created = time.Now()
 
 	tx, err := m.db.Begin()
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec("INSERT INTO discussions (id, title, author) VALUES (?, ?, ?)",
-		d.ID, d.Title, d.Author)
+	_, err = tx.Exec("INSERT INTO discussions (id, title, created, author) VALUES (?, ?, ?, ?)",
+		d.ID, d.Title, d.Created, d.Author)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -91,14 +93,15 @@ func (m *Manager) ListPosts(discID string) []*Post {
 
 func (m *Manager) Post(p *Post) error {
 	p.ID = newID()
+	p.Created = time.Now()
 
 	tx, err := m.db.Begin()
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec("INSERT INTO posts (id, discussion_id, author, body) VALUES (?, ?, ?, ?)",
-		p.ID, p.DiscussionID, p.Author, p.Body)
+	_, err = tx.Exec("INSERT INTO posts (id, discussion_id, created, author, body) VALUES (?, ?, ?, ?, ?)",
+		p.ID, p.DiscussionID, p.Created, p.Author, p.Body)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -133,9 +136,9 @@ func (m *Manager) createTable(table, create string) {
 }
 
 func (m *Manager) init() {
-	m.createTable("discussions", "CREATE TABLE %s ( id TEXT PRIMARY KEY, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, author TEXT )")
+	m.createTable("discussions", "CREATE TABLE %s ( id TEXT PRIMARY KEY, title TEXT, created DATETIME NOT NULL, author TEXT )")
 
-	m.createTable("posts", "CREATE TABLE %s ( id TEXT PRIMARY KEY, discussion_id TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, author TEXT, body TEXT, FOREIGN KEY(discussion_id) REFERENCES discussions(id) )")
+	m.createTable("posts", "CREATE TABLE %s ( id TEXT PRIMARY KEY, discussion_id TEXT, created DATETIME NOT NULL, author TEXT, body TEXT, FOREIGN KEY(discussion_id) REFERENCES discussions(id) )")
 }
 
 func newID() string {
