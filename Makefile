@@ -3,7 +3,7 @@ all: run
 run:
 	cd cmd/discussied/ && go run main.go
 
-push: jsbuild
+publish: jsbuild
 	git push
 
 jsbuild:
