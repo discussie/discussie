@@ -47,6 +47,11 @@ func (c *Context) DiscussionHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	if err := c.dmgr.Discuss(disc); err != nil {
+		if ve, ok := err.(ValidationError); ok {
+			rw.WriteHeader(400)
+			rw.Write([]byte(ve.String()))
+			return
+		}
 		die(rw, "Error creating discussion 2: ", err)
 		return
 	}
@@ -80,7 +85,12 @@ func (c *Context) PostHandler(rw http.ResponseWriter, req *http.Request) {
 	if err := c.dmgr.Post(post); err != nil {
 		if err == DiscussionNotFound {
 			rw.WriteHeader(404)
-			rw.Write([]byte("discussion not found"))
+			rw.Write([]byte(err.Error()))
+			return
+		}
+		if ve, ok := err.(ValidationError); ok {
+			rw.WriteHeader(400)
+			rw.Write([]byte(ve.String()))
 			return
 		}
 		die(rw, "Error creating post 2: ", err)

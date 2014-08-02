@@ -63,6 +63,9 @@ func (m *Manager) ListDiscussions() []*Discussion {
 func (m *Manager) Discuss(d *Discussion) error {
 	d.ID = newID()
 	d.Created = time.Now()
+	if err := d.Validate(); err != nil {
+		return err
+	}
 
 	tx, err := m.db.Begin()
 	if err != nil {
@@ -105,6 +108,9 @@ func (m *Manager) ListPosts(discID string) []*Post {
 func (m *Manager) Post(p *Post) error {
 	p.ID = newID()
 	p.Created = time.Now()
+	if err := p.Validate(); err != nil {
+		return err
+	}
 
 	tx, err := m.db.Begin()
 	if err != nil {
