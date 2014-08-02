@@ -80,3 +80,10 @@ To run locally simply run go api and go to `http://localhost:8000` in your brows
 ### Javascript optimization
 
 To optimize javascript install `r.js` by running `npm install -g requirejs`. Then run `make jsbuild` to build optimized version of `app.js`.
+
+### License
+
+See LICENSE for full text (hint: it's [Apache License
+v2](http://www.apache.org/licenses/LICENSE-2.0.html)).
+
+Copyright 2014 Michael Schurter & Piet van Zoen
