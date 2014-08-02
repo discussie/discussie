@@ -18,10 +18,6 @@ func newValidationError(msg string) ValidationError {
 }
 
 func (v ValidationError) Error() string {
-	return "models: " + v.msg
-}
-
-func (v ValidationError) String() string {
 	return v.msg
 }
 

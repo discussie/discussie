@@ -10,91 +10,90 @@ import (
 
 func Router(ctx *Context) *mux.Router {
 	r := mux.NewRouter()
-	r.HandleFunc("/api/discussions/", ctx.DiscussionHandler).Methods("GET", "POST")
-	r.HandleFunc("/api/discussions/{id}", ctx.PostHandler).Methods("GET", "POST")
+	r.HandleFunc("/api/discussions/", adapt(ctx, discussionHandler)).Methods("GET", "POST")
+	r.HandleFunc("/api/discussions/{id}", adapt(ctx, postHandler)).Methods("GET", "POST")
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("../../public/")))
 	return r
 }
 
-func die(rw http.ResponseWriter, msg string, err error) {
-	out := msg + err.Error()
-	log.Printf(out)
-	rw.WriteHeader(500)
-	rw.Write([]byte(out))
-	return
+type handler func(*Context, *http.Request) (body interface{}, code int, err error)
+
+func adapt(ctx *Context, h handler) func(http.ResponseWriter, *http.Request) {
+	return func(rw http.ResponseWriter, req *http.Request) {
+		setAPIHeaders(rw)
+		body, code, err := h(ctx, req)
+		rw.WriteHeader(code)
+		if err != nil {
+			log.Printf("%d %s -> %v", code, req.URL, err)
+			errMsg := err.Error()
+			if code == 500 {
+				// Don't expose internal errors
+				errMsg = "internal error"
+			}
+			body = struct {
+				Error string `json:"error"`
+			}{Error: errMsg}
+		}
+		if respErr := json.NewEncoder(rw).Encode(body); respErr != nil {
+			log.Printf("%s Error writing error response: %v", req.URL, respErr)
+		}
+	}
 }
 
 func setAPIHeaders(rw http.ResponseWriter) {
 	rw.Header().Set("Content-Type", "application/json")
 }
 
-func (c *Context) DiscussionHandler(rw http.ResponseWriter, req *http.Request) {
-	setAPIHeaders(rw)
+func discussionHandler(c *Context, req *http.Request) (interface{}, int, error) {
 
 	if req.Method == "GET" {
-		enc := json.NewEncoder(rw)
-		if err := enc.Encode(c.dmgr.ListDiscussions()); err != nil {
-			die(rw, "Error listing discussions: ", err)
-		}
-		return
+		return c.dmgr.ListDiscussions(), 200, nil
 	}
 
 	disc := &Discussion{}
 	dec := json.NewDecoder(req.Body)
 	defer req.Body.Close()
 	if err := dec.Decode(disc); err != nil {
-		die(rw, "Error creating discussion 1: ", err)
-		return
+		return nil, 400, err
 	}
 	if err := c.dmgr.Discuss(disc); err != nil {
 		if ve, ok := err.(ValidationError); ok {
-			rw.WriteHeader(400)
-			rw.Write([]byte(ve.String()))
-			return
+			return nil, 400, ve
 		}
-		die(rw, "Error creating discussion 2: ", err)
-		return
+		return nil, 500, err
 	}
-	rw.Write([]byte(`{ "discussion_id": "` + disc.ID + `" }`))
+	return &struct {
+		D string `json:"discussion_id"`
+	}{D: disc.ID}, 200, nil
 }
 
-func (c *Context) PostHandler(rw http.ResponseWriter, req *http.Request) {
-	setAPIHeaders(rw)
-
+func postHandler(c *Context, req *http.Request) (interface{}, int, error) {
 	vars := mux.Vars(req)
 	discID := vars["id"]
 	if discID == "" {
-		die(rw, "no id found", nil)
+		return nil, 400, DiscussionNotFound
 	}
 
 	if req.Method == "GET" {
-		enc := json.NewEncoder(rw)
-		if err := enc.Encode(c.dmgr.ListPosts(discID)); err != nil {
-			die(rw, "Error encoding posts: ", err)
-		}
-		return
+		return c.dmgr.ListPosts(discID), 200, nil
 	}
 
 	post := &Post{DiscussionID: discID}
 	dec := json.NewDecoder(req.Body)
 	defer req.Body.Close()
 	if err := dec.Decode(post); err != nil {
-		die(rw, "Error creating post 1: ", err)
-		return
+		return nil, 400, err
 	}
 	if err := c.dmgr.Post(post); err != nil {
 		if err == DiscussionNotFound {
-			rw.WriteHeader(404)
-			rw.Write([]byte(err.Error()))
-			return
+			return nil, 400, DiscussionNotFound
 		}
-		if ve, ok := err.(ValidationError); ok {
-			rw.WriteHeader(400)
-			rw.Write([]byte(ve.String()))
-			return
+		if _, ok := err.(ValidationError); ok {
+			return nil, 400, err
 		}
-		die(rw, "Error creating post 2: ", err)
-		return
+		return nil, 500, err
 	}
-	rw.Write([]byte(`{ "post_id": "` + post.ID + `" }`))
+	return struct {
+		P string `json:"post_id"`
+	}{P: post.ID}, 200, nil
 }
