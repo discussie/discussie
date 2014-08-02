@@ -43,7 +43,7 @@ func (m *Manager) ListDiscussions() []*Discussion {
 	}
 	defer tx.Rollback()
 
-	c, err := tx.Query("SELECT * FROM discussions")
+	c, err := tx.Query("SELECT * FROM discussions ORDER BY created DESC")
 	if err != nil {
 		panic(err)
 	}
@@ -88,7 +88,7 @@ func (m *Manager) ListPosts(discID string) []*Post {
 	}
 	defer tx.Rollback()
 
-	c, err := tx.Query("SELECT * FROM posts WHERE discussion_id = ?", discID)
+	c, err := tx.Query("SELECT * FROM posts WHERE discussion_id = ? ORDER BY created ASC", discID)
 	if err != nil {
 		panic(err)
 	}
