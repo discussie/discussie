@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/russross/blackfriday"
 )
 
 func Router(ctx *Context) *mux.Router {
@@ -75,7 +76,12 @@ func postHandler(c *Context, req *http.Request) (interface{}, int, error) {
 	}
 
 	if req.Method == "GET" {
-		return c.dmgr.ListPosts(discID), 200, nil
+		posts := c.dmgr.ListPosts(discID)
+		// Render as markdown
+		for _, p := range posts {
+			p.Body = string(blackfriday.MarkdownCommon([]byte(p.Body)))
+		}
+		return posts, 200, nil
 	}
 
 	post := &Post{DiscussionID: discID}
