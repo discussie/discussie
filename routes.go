@@ -9,11 +9,11 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-func Router(ctx *Context) *mux.Router {
+func Router(ctx *Context, path string) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/discussions/", adapt(ctx, discussionHandler)).Methods("GET", "POST")
 	r.HandleFunc("/api/discussions/{id}", adapt(ctx, postHandler)).Methods("GET", "POST")
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("../../public/")))
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir(path)))
 	return r
 }
 
