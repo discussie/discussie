@@ -120,8 +120,10 @@ func (m *Manager) Post(p *Post) error {
 	_, err = getDiscussion(tx, p.DiscussionID)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			tx.Rollback()
 			return DiscussionNotFound
 		}
+		tx.Rollback()
 		return err
 	}
 
