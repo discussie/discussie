@@ -133,9 +133,9 @@ func (m *Manager) createTable(table, create string) {
 }
 
 func (m *Manager) init() {
-	m.createTable("discussions", "CREATE TABLE %s ( id TEXT PRIMARY KEY, title TEXT, created TEXT, author TEXT )")
+	m.createTable("discussions", "CREATE TABLE %s ( id TEXT PRIMARY KEY, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, author TEXT )")
 
-	m.createTable("posts", "CREATE TABLE %s ( id TEXT PRIMARY KEY, discussion_id TEXT, created TEXT, author TEXT, body TEXT, FOREIGN KEY(discussion_id) REFERENCES discussions(id) )")
+	m.createTable("posts", "CREATE TABLE %s ( id TEXT PRIMARY KEY, discussion_id TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, author TEXT, body TEXT, FOREIGN KEY(discussion_id) REFERENCES discussions(id) )")
 }
 
 func newID() string {

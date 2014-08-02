@@ -1,9 +1,13 @@
 package discussie
 
+import (
+	"time"
+)
+
 type Discussion struct {
 	ID      string `json:"id"`
 	Title   string `json:"title"`
-	Created string `json:"created"` //FIXME
+	Created time.Time `json:"created"` //FIXME
 	Author  string `json:"author"`  //FIXME?
 }
 
@@ -21,7 +25,7 @@ func NewDicussion(title, author string) *Discussion {
 type Post struct {
 	ID           string `json:"id"`
 	DiscussionID string `json:"discussion"`
-	Created      string `json:"created"` //FIXME
+	Created      time.Time `json:"created"` //FIXME
 	Author       string `json:"author"`  //FIXME?
 	Body         string `json:"body"`
 }
