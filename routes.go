@@ -49,7 +49,11 @@ func setAPIHeaders(rw http.ResponseWriter) {
 func discussionHandler(c *Context, req *http.Request) (interface{}, int, error) {
 
 	if req.Method == "GET" {
-		return c.dmgr.ListDiscussions(), 200, nil
+		all, err := c.dmgr.ListDiscussions()
+		if err != nil {
+			return nil, 500, err
+		}
+		return all, 200, nil
 	}
 
 	disc := &Discussion{}

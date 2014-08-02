@@ -36,16 +36,16 @@ func getDiscussion(tx *sql.Tx, id string) (*Discussion, error) {
 	return d, r.Scan(&d.ID, &d.Title, &d.Created, &d.Author)
 }
 
-func (m *Manager) ListDiscussions() []*Discussion {
+func (m *Manager) ListDiscussions() ([]*Discussion, error) {
 	tx, err := m.db.Begin()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer tx.Rollback()
 
 	c, err := tx.Query("SELECT * FROM discussions ORDER BY created DESC")
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer c.Close()
 
@@ -53,11 +53,11 @@ func (m *Manager) ListDiscussions() []*Discussion {
 	for c.Next() {
 		d := &Discussion{}
 		if err := c.Scan(&d.ID, &d.Title, &d.Created, &d.Author); err != nil {
-			panic(err)
+			return nil, err
 		}
 		all = append(all, d)
 	}
-	return all
+	return all, nil
 }
 
 func (m *Manager) Discuss(d *Discussion) error {
