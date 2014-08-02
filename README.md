@@ -59,7 +59,7 @@ echo '{
 }' | http POST localhost:8000/api/discussions/BIG-LONG-ID
 ```
 
-You can also preview a post by just rendering it as markdown:
+Preview a post by just rendering it as markdown:
 
 ```
 echo '{"body": "**ok**"}' | http POST localhost:8000/api/render/
