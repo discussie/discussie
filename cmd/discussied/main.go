@@ -7,7 +7,7 @@ import (
 	"os"
 	"path"
 
-	"bitbucket.org/schmichael/discussie"
+	"github.com/discussie/discussie"
 )
 
 func main() {
