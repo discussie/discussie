@@ -24,7 +24,8 @@ function (_, Net, ko, BaseModel, Discussion, Post) {
       getDiscussions: { verb: 'get', url: '/api/discussions/' },
       getPosts: { verb: 'get', url: '/api/discussions/{id}' },
       newDiscussion: { verb: 'post', url: '/api/discussions/' },
-      newPost: { verb: 'post', url: '/api/discussions/{id}' }
+      newPost: { verb: 'post', url: '/api/discussions/{id}' },
+      renderMarkdown: { verb: 'post', url: '/api/render/' }
     };
 
     this.discussions = [];
@@ -78,7 +79,13 @@ function (_, Net, ko, BaseModel, Discussion, Post) {
         }
         self.newPost(data, function (newPostRes, state) {
           _.extend(newDiscussionRes, newPostRes);
-          callback(newDiscussionRes, state);
+          var body = data.data.body;
+          self.renderMarkdown(body, function (html) {
+            if (html) {
+              _.extend(newDiscussionRes, { body: html });
+              callback(newDiscussionRes, state);
+            }
+          });
         });
       });
     },
@@ -114,6 +121,25 @@ function (_, Net, ko, BaseModel, Discussion, Post) {
           });
         }
         callback(posts, state);
+      });
+    },
+
+    renderMarkdown: function (text, callback) {
+      callback = callback || _.noop;
+
+      if (!text) {
+        console.error('Don\'t be silly, I need some text to render.');
+        return false;
+      }
+
+      var options = { data: { body: text } };
+
+      this.call('renderMarkdown', options, function (res, state) {
+        if (state === 'success') {
+          callback(res.body);
+        } else {
+          callback(false);
+        }
       });
     },
 

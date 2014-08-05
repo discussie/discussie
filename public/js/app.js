@@ -95,17 +95,17 @@ function (_, ko, moment, BaseViewModel, Post, Discussion, Api) {
       Api.newPost(options, function (res, state) {
         var postId = res.post_id; // jshint ignore: line
         if (state === 'success' && postId) {
-          discussion.migrateNewPost(postId);
+          discussion.migrateNewPost(postId, res.body);
         } else {
           newPost.errorMessage('There was an issue posting... please try again.');
         }
       });
     },
 
-    migrateNewDiscussion: function (discussionId, postId) {
+    migrateNewDiscussion: function (discussionId, postId, body) {
       this.newDiscussion().id(discussionId); //jshint ignore: line
       this.newDiscussion().created(moment().format('X'));
-      this.newDiscussion().migrateNewPost(postId);
+      this.newDiscussion().migrateNewPost(postId, body);
       this.discussions.push(this.newDiscussion());
       this.initNewDiscussion();
     },
@@ -128,7 +128,7 @@ function (_, ko, moment, BaseViewModel, Post, Discussion, Api) {
         newDiscussion.errorMessage('Author name, message and title are required.');
         return;
       }
-      newDiscussion.errorMessage('This is when a new discussion will be created.');
+      newDiscussion.errorMessage('');
 
       var options = {
         data: {
@@ -142,7 +142,7 @@ function (_, ko, moment, BaseViewModel, Post, Discussion, Api) {
         var discussionId = res.discussion_id; // jshint ignore: line
         var postId = res.post_id; // jshint ignore: line
         if (state === 'success' && discussionId) {
-          self.migrateNewDiscussion(discussionId, postId);
+          self.migrateNewDiscussion(discussionId, postId, res.body);
           self.initNewDiscussion();
           window.location = '#/discussion/' + discussionId;
         } else {

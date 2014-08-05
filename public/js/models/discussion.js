@@ -61,8 +61,9 @@ function (_, ko, BaseModel, moment, Post) {
       this.newPost(new Post({ discussion: this.id }));
     },
 
-    migrateNewPost: function (id) {
-      this.newPost().id(id); //jshint ignore: line
+    migrateNewPost: function (id, body) {
+      this.newPost().id(id);
+      this.newPost().body(body);
       this.newPost().created(moment().format('X'));
       this.posts.push(this.newPost());
       this.initNewPost();
