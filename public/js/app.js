@@ -106,7 +106,7 @@ function (_, ko, moment, BaseViewModel, Post, Discussion, Api) {
       this.newDiscussion().id(discussionId); //jshint ignore: line
       this.newDiscussion().created(moment().format('X'));
       this.newDiscussion().migrateNewPost(postId, body);
-      this.discussions.push(this.newDiscussion());
+      this.discussions.unshift(this.newDiscussion());
       this.initNewDiscussion();
     },
 
