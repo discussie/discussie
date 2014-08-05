@@ -51,6 +51,9 @@ function (_, ko, BaseModel, moment, Post) {
       }, this);
 
       this.firstPost = ko.computed(function () {
+        if (this.posts()[0]) {
+          this.posts()[0].isFirst(true);
+        }
         return this.posts()[0];
       }, this);
 

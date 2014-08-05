@@ -25,6 +25,8 @@ function (_, ko, BaseModel, moment) {
     this.discussion = options.discussion || null;
     this.id = options.id || null;
 
+    this.isFirst = false;
+
     this.errorMessage = '';
 
     BaseModel.apply(this, arguments);
@@ -42,6 +44,13 @@ function (_, ko, BaseModel, moment) {
         return moment(this.created()).fromNow();
       }, this);
 
+
+      this.postDetails = ko.computed(function () {
+        var timeAgo = document.createElement('span');
+        timeAgo.title = moment(this.created()).format('YYYY-MM-DD HH:MM:SS');
+        timeAgo.textContent = this.fromNowCreated();
+        return this.author() + ' ' + (this.isFirst() ? 'posted' : 'replied') + ' ' + timeAgo.outerHTML;
+      }, this);
     }
 
   });
