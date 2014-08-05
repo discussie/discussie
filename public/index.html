@@ -89,7 +89,7 @@
 
       <form>
         <div class="form-group">
-          <textarea class="form-control" rows="3" data-bind="value: newPost().body" required></textarea>
+          <textarea class="form-control" rows="5" data-bind="value: newPost().body" required></textarea>
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-primary" data-bind="click: $root.submitPost">Post</button>
@@ -112,7 +112,7 @@
     if (location.host.match('localhost')) {
       require.config({ urlArgs: Date.now() });
     } else {
-      require.config({ appFile: 'app-built' });
+      require.config({ app: 'app-built' });
     };
     // init!
     require(['/js/requireConfig.js'], function () {
