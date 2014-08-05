@@ -6,6 +6,9 @@ run:
 publish: jsbuild
 	git push
 
+gobuild:
+	cd cmd/discussied/ && go build
+
 jsbuild:
 	r.js -o build.js
 	git reset
