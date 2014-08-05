@@ -108,9 +108,11 @@ func postHandler(c *Context, req *http.Request) (interface{}, int, error) {
 		}
 		return nil, 500, err
 	}
+	htmlBody := string(blackfriday.MarkdownCommon([]byte(post.Body)))
 	return &struct {
 		P string `json:"post_id"`
-	}{P: post.ID}, 200, nil
+		B string `json:"body"`
+	}{P: post.ID, B: htmlBody}, 200, nil
 }
 
 func recentHandler(c *Context, req *http.Request) (interface{}, int, error) {
