@@ -24,7 +24,6 @@ function (_, ko, BaseModel, moment, Post) {
     this.created = options.created || null;
     this.id = options.id || null;
     this.title = options.title || null;
-    this.link = options.id ? '#/discussion/' + options.id : null;
 
     this.posts = [];
 
@@ -53,6 +52,10 @@ function (_, ko, BaseModel, moment, Post) {
 
       this.firstPost = ko.computed(function () {
         return this.posts()[0];
+      }, this);
+
+      this.link = ko.computed(function () {
+        return '#/discussion/' + this.id();
       }, this);
 
     },
