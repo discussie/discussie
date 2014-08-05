@@ -14,6 +14,12 @@ define(
 ],
 function (_, ko, moment, BaseViewModel, Post, Discussion, Api) {
 
+  // ko.bindingHandlers.log = {
+  //   update: function (el, value) {
+  //     console.log(ko.unwrap(value)());
+  //   }
+  // };
+
   var App = function () {
 
     this.user = window.localStorage.user || '';
@@ -56,6 +62,7 @@ function (_, ko, moment, BaseViewModel, Post, Discussion, Api) {
 
       this.initNewDiscussion();
 
+      // throw 'pause';
       this.loaded(true);
     },
 
@@ -77,14 +84,15 @@ function (_, ko, moment, BaseViewModel, Post, Discussion, Api) {
       }
       newPost.errorMessage('');
 
-      var data = {
+      var options = {
+        id: discussion.id(),
         data: {
           author: newPost.author(),
           body: newPost.body()
         }
       };
 
-      Api.newPost(discussion, data, function (res, state) {
+      Api.newPost(options, function (res, state) {
         var postId = res.post_id; // jshint ignore: line
         if (state === 'success' && postId) {
           discussion.migrateNewPost(postId);
@@ -94,18 +102,27 @@ function (_, ko, moment, BaseViewModel, Post, Discussion, Api) {
       });
     },
 
+    migrateNewDiscussion: function (discussionId, postId) {
+      this.newDiscussion().id(discussionId); //jshint ignore: line
+      this.newDiscussion().created(moment().format('X'));
+      this.newDiscussion().migrateNewPost(postId);
+      this.discussions.push(this.newDiscussion());
+      this.initNewDiscussion();
+    },
+
     initNewDiscussion: function () {
       var options = {
         author: this.user()
       };
       this.newDiscussion(new Discussion(options));
-      this.newDiscussion().posts.push(new Post(options));
+      this.newDiscussion().newPost(new Post(options));
     },
 
     submitDiscussion: function () {
+      var self = this;
       var newDiscussion = this.newDiscussion();
       newDiscussion.errorMessage('');
-      var post = newDiscussion.firstPost();
+      var post = newDiscussion.newPost();
 
       if (!newDiscussion.author() || !post.body() || !newDiscussion.title()) {
         newDiscussion.errorMessage('Author name, message and title are required.');
@@ -113,28 +130,25 @@ function (_, ko, moment, BaseViewModel, Post, Discussion, Api) {
       }
       newDiscussion.errorMessage('This is when a new discussion will be created.');
 
-      var discussionOptions = {
+      var options = {
         data: {
           author: newDiscussion.author(),
-          title: newDiscussion.title()
+          title: newDiscussion.title(),
+          body: post.body()
         }
       };
 
-      var firstPostOptions = {
-        data: {
-          author: newDiscussion.author(),
-          body: newDiscussion.firstPost().body()
+      Api.newDiscussion(options, function (res, state) {
+        var discussionId = res.discussion_id; // jshint ignore: line
+        var postId = res.post_id; // jshint ignore: line
+        if (state === 'success' && discussionId) {
+          self.migrateNewDiscussion(discussionId, postId);
+          self.initNewDiscussion();
+          window.location = '#/discussion/' + discussionId;
+        } else {
+          newDiscussion.errorMessage('There was an issue posting... please try again.');
         }
-      };
-
-      // Api.newDiscussion(discussion, data, function (res, state) {
-      //   var postId = res.post_id; // jshint ignore: line
-      //   if (state === 'success' && postId) {
-      //     discussion.migrateNewPost(postId);
-      //   } else {
-      //     newPost.errorMessage('There was an issue posting... please try again.');
-      //   }
-      // });
+      });
     }
 
   });

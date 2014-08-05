@@ -48,9 +48,13 @@ function (_, Net, ko, BaseModel, Discussion, Post) {
         if (state === 'error') { onload(self); }
         if (res.length === 0) {
           onload(self);
+          return;
         }
+        var gets = res.length;
         self.discussions().forEach(function (discussion) {
           self.getPosts(discussion, function (res, state) {
+            gets--;
+            if (gets !== 0) { return false; }
             if (state === 'error') {
               onload(self);
             } else {
@@ -62,9 +66,25 @@ function (_, Net, ko, BaseModel, Discussion, Post) {
 
     },
 
-    newPost: function (discussion, data, callback) {
+    newDiscussion: function (data, callback) {
+      var self = this;
       callback = callback || _.noop;
-      data.id = data.id || discussion.id();
+
+      this.call('newDiscussion', data, function (newDiscussionRes, state) {
+        data.id = newDiscussionRes.discussion_id; // jshint ignore: line
+        if (state === 'error' && data.id) {
+          callback(newDiscussionRes, state);
+          return;
+        }
+        self.newPost(data, function (newPostRes, state) {
+          _.extend(newDiscussionRes, newPostRes);
+          callback(newDiscussionRes, state);
+        });
+      });
+    },
+
+    newPost: function (data, callback) {
+      callback = callback || _.noop;
       this.call('newPost', data, function (res, state) {
         callback(res, state);
       });
@@ -74,6 +94,7 @@ function (_, Net, ko, BaseModel, Discussion, Post) {
       var self = this;
       callback = callback || _.noop;
       this.call('getDiscussions', function (discussions, state) {
+        console.log(discussions, state);
         if (state !== 'error') {
           discussions.forEach(function (discussion) {
             self.discussions.push(new Discussion(discussion));
@@ -122,21 +143,22 @@ function (_, Net, ko, BaseModel, Discussion, Post) {
         delete data.id;
       }
 
-      var packet = {
+      var options = {
         url: url
       };
-      _.extend(packet, data);
+      _.extend(options, data);
 
       var success = function (res) {
+        // console.log(options, res, 'success');
         callback(res, 'success');
       };
 
       var error = function (res) {
-        console.error(packet, res);
+        console.error(options, res);
         callback(res, 'error');
       };
 
-      Net.json[endpoint.verb](packet).then(success, error);
+      Net.json[endpoint.verb](options).then(success, error);
 
     }
 
